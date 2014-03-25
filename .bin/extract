@@ -1,0 +1,54 @@
+#!/bin/zsh
+
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.gz)  tar xzf $1 ;;
+            *.tar.bz2) tar xjf $1 ;;
+            *.bz2)     bunzip2 $1 ;;
+            *.rar)     unrar x $1 ;;
+            *.gz)      gunzip  $1 ;;
+            *.tar)     tar xf  $1 ;;
+            *.tbz2)    tar xjf $1 ;;
+            *.tgz)     tar xzf $1 ;;
+            *.zip)     unzip   $1 ;;
+            *.Z)    uncompress $1 ;;
+            *.7z)      7z x    $1 ;;
+            *) compress $1 ;;
+        esac
+    else
+        echo "Không đúng định dạng!!"
+    fi
+}
+
+compress () {
+echo "1 - tar.gz \t\t 4 - tar \t\t 7 - zip"
+echo "2 - tar.bz2 \t\t 5 - tgz \t\t 8 - rar"
+echo "3 - bz2 \t\t 6 - tbz2 \t\t 9 - 7z"
+
+        echo -n "Chọn số (đại diện cho định dạng) mà bạn muốn nén: "
+        read format
+        case $format in
+            "1")
+                tar czpf ./$1.tar.gz $1
+                ;;
+            "2") tar jcvf ./$1.tar.bz2 $1 ;;
+            "3") echo "Only compress one file"
+                ;;
+            "4") tar cvf ./$1.tar $1 ;;
+            "5") tar zcvf ./$1.tgz $1 ;;
+            "6") tar jcvf ./$1.tbz2 $1;;
+            "7") zip -r ./$1.zip $1 ;;
+            "8") rar a -r ./$1.rar $1 ;;
+            "9") 7z a -r ./$1.7z $1 ;;
+            *) echo "Number was wrong!?";;
+        esac
+}
+
+if [ -d $1 ] ; then
+    compress $1
+elif [ -f $1 ] ; then
+    extract $1
+else
+    return 1
+fi
